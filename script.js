@@ -21,13 +21,13 @@ actualPlayerName[3] = ("A nyertes:                 ");
 $("#pl0").text(playerName[0]);
 $("#pl1").text(playerName[1]);
 $("#gameGo").text(actualPlayerName[actualPlayer]);
-//player field index
+//player field index (0 - 99) & feltölt +
 let data = [];
 for (i = 0; i < 100; i++) {
   data.push("+");
 }
 
-
+// 10 x 10-es tábla, (+1 mezo a szélekhez, vizsgálatnál ne szaladjon ki a tömbbol)
 playGround = new Array(12);
 for (i=0; i < playGround.length; ++i){
    playGround[i] = new Array(12);
@@ -37,10 +37,7 @@ for (i=0; i < playGround.length; ++i){
    }
 }
 
-
-//*data.forEach((item, index) => {
-// $('#container').append(`<div class="box" data-index="${index}">  ${item} (data-index="${index}")  </div>`);
-//})
+//mezok felrajzolása, minden egyes elem kap külön id-t -> b0,b1,b2... és egy indexet
 let index = 0;
 for (index = 0; index < 100; index++) {
   $('#container').append(`<div class="box" id="b${index}" data-index="${index}"></div>`)
@@ -51,36 +48,34 @@ for (index = 0; index < 100; index++) {
 
 $('.box').click((event) => {
 
-	if (gameOver==1){
-	
+	if (gameOver==1){//click esemény kezelése START
 	
   let indexClicked = $(event.target).attr('data-index');
   let numberIndex = parseInt(indexClicked);
   console.log(numberIndex);
   console.log(data[numberIndex])
 //**********************************************if start	
-  if (data[numberIndex] == "+") {
+  if (data[numberIndex] == "+") {//ha a mezo még nem használt (+) feltölt O vagy X
 
 	  $("#gameGo").text(actualPlayerName[actualPlayer]);
     //console.log(actualPlayerName[actualPlayer]);
-    data[numberIndex] = player[actualPlayer];
-	  console.log("elemsorszám: "+numberIndex);
-// dimension
+    data[numberIndex] = player[actualPlayer];// aktuális játékos jele: X O
+	console.log("elemsorszám: "+numberIndex);
+// dimension koordináták kiszámolása MOD függvénnyel
 	  xcoor=numberIndex % 10;
 	  ycoor=((numberIndex-xcoor)/10);
 	  xcoor++;
 	  console.log("xcoor: "+xcoor);
 	  ycoor++;
 	  console.log("ycoor: "+ycoor);
-//tábla mezok	  
-
+//tábla mezok  
 	  
-	  playGround[xcoor][ycoor]=data[numberIndex]
-
+	  playGround[xcoor][ycoor]=data[numberIndex]//akt. játékos jele elhelyezése a táblába
 	  
 	  //console.log(data[numberIndex]);
-    $('#clicked').text(data[numberIndex]);
-    if (actualPlayer == 0) {
+    $('#clicked').text(data[numberIndex]);//teszthez használt kiiratás képernyore
+//aktuális játékos kiiratása a képernyore
+	  if (actualPlayer == 0) {
       $("#b" + numberIndex + ".box").css("background-color", "hotpink");
       $("#b" + numberIndex + ".box").text("X")
       actualRound++;
@@ -90,11 +85,8 @@ $('.box').click((event) => {
       $("#b" + numberIndex + ".box").text("O")
       actualRound++;
     }
-		
-	  
-    actualPlayer = actualRound % 2; //az aktuális játékos
-
-  } else {
+    actualPlayer = actualRound % 2; //az aktuális játékos 0 vagy 1
+  } else {//ha már felhasznált a mezo figy. üzenet
     $("#gameGo").text(actualPlayerName[2]);
   }
 	
@@ -106,9 +98,7 @@ $('.box').click((event) => {
 	console.log("jel. "+jel);
 	  console.log("jel-jel: "+playGround[ycoor][xcoor+i]+" <---> "+jel+" szamlalo  "+novel+" novelt vizsgalando: "+(xcoor+novel));
 	
-	
-	
-	while (keres==true) {
+	while (keres==true) {//találatvizsgálat ciklus
 //***********************************************************   keres ciklus start	
 		
 //--------------------------------------------------------------------------------		
@@ -122,7 +112,7 @@ $('.box').click((event) => {
 			 }
 		 }
 		novel=1;
-///////keres ballra xcoor-1 !!! tehát jobbra tedd az elemet !!!	
+///////keres ballra xcoor-1
 		    while ((playGround[xcoor-novel][ycoor])==jel){
 		 talalat++;
 			 novel++;
@@ -138,7 +128,7 @@ $('.box').click((event) => {
 		talalat=1;
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------		
-///////keres fugg le xcoor+1 !!! tehát balra tedd az elemet !!!		
+///////keres fugg fel ycoor+1
 		 while ((playGround[xcoor][ycoor+novel])==jel){
 			 talalat++;
 			 novel++;
@@ -148,7 +138,7 @@ $('.box').click((event) => {
 			 }
 		 }
 		novel=1;
-///////keres fugg fel xcoor-1 !!! tehát jobbra tedd az elemet !!!	
+///////keres fugg le ycoor-1
 		    while ((playGround[xcoor][ycoor-novel])==jel){
 		 talalat++;
 			 novel++;
@@ -164,7 +154,7 @@ $('.box').click((event) => {
 		talalat=1;
 //--------------------------------------------------------------------------------	
 //--------------------------------------------------------------------------------		
-///////keres jobbra fel	
+///////keres jobbra le
 		 while ((playGround[xcoor+novel][ycoor-novel])==jel){
 			 talalat++;
 			 novel++;
@@ -174,7 +164,7 @@ $('.box').click((event) => {
 			 }
 		 }
 		novel=1;
-///////keres ballra le
+///////keres ballra fel
 		    while ((playGround[xcoor-novel][ycoor+novel])==jel){
 		 talalat++;
 			 novel++;
@@ -189,7 +179,7 @@ $('.box').click((event) => {
 		talalat=1;
 //--------------------------------------------------------------------------------	
 //--------------------------------------------------------------------------------		
-///////keres jobbra le	
+///////keres ballra le	
 		 while ((playGround[xcoor-novel][ycoor-novel])==jel){
 			 talalat++;
 			 novel++;
@@ -199,7 +189,7 @@ $('.box').click((event) => {
 			 }
 		 }
 		novel=1;
-///////keres ballra fel
+///////keres jobbra fel
 		    while ((playGround[xcoor+novel][ycoor+novel])==jel){
 		 talalat++;
 			 novel++;
@@ -214,25 +204,18 @@ $('.box').click((event) => {
 		novel=1;
 		talalat=1;
 //--------------------------------------------------------------------------------	
-				
-		
 //***********************************************************   keres ciklus end	
-	}  
-	  
+
+	}//találatvizsgálat ciklus
  
 //***************************************************** if end
-
 	
+	}//click esemény kezelése END
 	
-	}
-	/////ideje a gyöztes
+/////és a gyöztes !!!
 	if(gameOver==0){
 		$("#gameGo").text(actualPlayerName[3]+playerName[actualPlayer]);
 		$("#newGame").click(newg);
 		function newg(){location.reload();};
-		
 	}
-	
 })
-
-//})
