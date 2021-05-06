@@ -9,11 +9,11 @@ let player = [1];
 player[0] = "X";
 player[1] = "O";
 let actualPlayer = 0;
-let actualRound = 0;
-let playerName = [1];
+let actualRound = 0;//MOD/2 függv-> a kör aktuális játékosa 1,2,1,... 
+let playerName = [1];// teszt miatt állandó, ha számít a név -> input text
 playerName[0]=("Tom");
 playerName[1]=("Jerry")
-let actualPlayerName = [3];
+let actualPlayerName = [4];
 actualPlayerName[0] = ("Te vagy Tom   O            ");
 actualPlayerName[1] = ("Te vagy Jerry X            ");
 actualPlayerName[2] = ("Nem kattinthatsz ugyanarra!");
@@ -22,11 +22,11 @@ $("#pl0").text(playerName[0]);
 $("#pl1").text(playerName[1]);
 $("#gameGo").text(actualPlayerName[actualPlayer]);
 //player field index (0 - 99) & feltölt +
-let data = [];
+let data = [];//vizsgálathoz, hogy foglalt-e a mezo
 for (i = 0; i < 100; i++) {
   data.push("+");
 }
-
+//tábla az 5 találat vizsgálatához
 // 10 x 10-es tábla, (+1 mezo a szélekhez, vizsgálatnál ne szaladjon ki a tömbbol)
 playGround = new Array(12);
 for (i=0; i < playGround.length; ++i){
@@ -50,10 +50,10 @@ $('.box').click((event) => {
 
 	if (gameOver==1){//click esemény kezelése START
 	
-  let indexClicked = $(event.target).attr('data-index');
-  let numberIndex = parseInt(indexClicked);
+  let indexClicked = $(event.target).attr('data-index');//a rákattintott mezo data-index atributumának a kiolvasása
+  let numberIndex = parseInt(indexClicked);//biztos ami biztos számmá alakítom
   console.log(numberIndex);
-  console.log(data[numberIndex])
+  console.log(data[numberIndex])//rákattintoot mezo tartalma +, X, O
 //**********************************************if start	
   if (data[numberIndex] == "+") {//ha a mezo még nem használt (+) feltölt O vagy X
 
@@ -64,17 +64,18 @@ $('.box').click((event) => {
 // dimension koordináták kiszámolása MOD függvénnyel
 	  xcoor=numberIndex % 10;
 	  ycoor=((numberIndex-xcoor)/10);
-	  xcoor++;
+	  xcoor++;//hozzá kell adni 1-et, hogy a vizsgálatnál ne szaladjon ki a tömbbol (1-10)
 	  console.log("xcoor: "+xcoor);
-	  ycoor++;
+	  ycoor++;//hozzá kell adni 1-et, hogy a vizsgálatnál ne szaladjon ki a tömbbol (1-10)
 	  console.log("ycoor: "+ycoor);
 //tábla mezok  
 	  
-	  playGround[xcoor][ycoor]=data[numberIndex]//akt. játékos jele elhelyezése a táblába
+	  playGround[xcoor][ycoor]=data[numberIndex]//akt. játékos jele elhelyezése a táblába, szélso mezok kihagyva
 	  
 	  //console.log(data[numberIndex]);
-    $('#clicked').text(data[numberIndex]);//teszthez használt kiiratás képernyore
+    $('#clicked').text(data[numberIndex]);//teszthez használt kiiratás képernyore source code-ban kikommentelve
 //aktuális játékos kiiratása a képernyore
+//az éppen kattintott mezo szinezése, és a megfelelo jel kirakása
 	  if (actualPlayer == 0) {
       $("#b" + numberIndex + ".box").css("background-color", "hotpink");
       $("#b" + numberIndex + ".box").text("X")
